@@ -576,7 +576,219 @@ class Main {
 }
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------STACK AS LINKED LIST-----------------------------------------------------------------------------------------------------------
+import java.util.Scanner;
 
+class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class Stack {
+    private Node top;
+    private int size;
+    private int capacity;
+
+    public Stack(int capacity) {
+        this.top = null;
+        this.size = 0;
+        this.capacity = capacity;
+    }
+
+    public void push(int data) {
+        if (isFull()) {
+            System.out.println("Stack overflow! Cannot push element " + data);
+            return;
+        }
+
+        Node newNode = new Node(data);
+        newNode.next = top;
+        top = newNode;
+        size++;
+        System.out.println(data + " pushed onto the stack");
+    }
+
+    public int pop() {
+        if (isEmpty()) {
+            System.out.println("Stack underflow! Cannot pop element");
+            return -1; // Return a sentinel value indicating an error
+        }
+
+        int poppedData = top.data;
+        top = top.next;
+        size--;
+        System.out.println(poppedData + " popped from the stack");
+        return poppedData;
+    }
+
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty");
+            return;
+        }
+
+        System.out.print("Stack: ");
+        Node current = top;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the capacity of the stack: ");
+        int stackCapacity = scanner.nextInt();
+        Stack stack = new Stack(stackCapacity);
+
+        while (true) {
+            System.out.println("\nStack Operations:");
+            System.out.println("1. Push");
+            System.out.println("2. Pop");
+            System.out.println("3. Display");
+            System.out.println("4. Exit");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the element to push: ");
+                    int element = scanner.nextInt();
+                    stack.push(element);
+                    break;
+                case 2:
+                    stack.pop();
+                    break;
+                case 3:
+                    stack.display();
+                    break;
+                case 4:
+                    System.out.println("Exiting the program");
+                    scanner.close();
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+}
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------QUEUE AS LINKED LIST-----------------------------------------------------------------------------------------------------------
+
+import java.util.Scanner;
+
+class CircularQueue {
+    private int front, rear;
+    private int maxSize;
+    private int[] queue;
+
+    public CircularQueue(int size) {
+        maxSize = size + 1; // One extra space for circular implementation
+        queue = new int[maxSize];
+        front = rear = 0;
+    }
+
+    public boolean isEmpty() {
+        return front == rear;
+    }
+
+    public boolean isFull() {
+        return (rear + 1) % maxSize == front;
+    }
+
+    public void enqueue(int orderNumber) {
+        if (isFull()) {
+            System.out.println("Queue is full. Cannot accept more orders.");
+        } else {
+            rear = (rear + 1) % maxSize;
+            queue[rear] = orderNumber;
+            System.out.println("Order " + orderNumber + " placed successfully.");
+        }
+    }
+
+    public void dequeue() {
+        if (isEmpty()) {
+            System.out.println("No orders to serve.");
+        } else {
+            front = (front + 1) % maxSize;
+            System.out.println("Order " + queue[front] + " served.");
+        }
+    }
+
+    public void displayQueue() {
+        if (isEmpty()) {
+            System.out.println("No orders in the queue.");
+        } else {
+            System.out.print("Orders in the queue: ");
+            int i = (front + 1) % maxSize;
+            while (i != (rear + 1) % maxSize) {
+                System.out.print(queue[i] + " ");
+                i = (i + 1) % maxSize;
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class PizzaParlorSimulation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the maximum number of orders the pizza parlor can accept: ");
+        int maxOrders = scanner.nextInt();
+
+        CircularQueue pizzaQueue = new CircularQueue(maxOrders);
+
+        while (true) {
+            System.out.println("\n1. Place an order");
+            System.out.println("2. Serve an order");
+            System.out.println("3. Display orders in the queue");
+            System.out.println("4. Exit");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    if (!pizzaQueue.isFull()) {
+                        System.out.print("Enter order number: ");
+                        int orderNumber = scanner.nextInt();
+                        pizzaQueue.enqueue(orderNumber);
+                    } else {
+                        System.out.println("Cannot accept more orders. Queue is full.");
+                    }
+                    break;
+                case 2:
+                    pizzaQueue.dequeue();
+                    break;
+                case 3:
+                    pizzaQueue.displayQueue();
+                    break;
+                case 4:
+                    System.out.println("Exiting the pizza parlor simulation.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+}
