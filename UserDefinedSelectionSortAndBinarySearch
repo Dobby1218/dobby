@@ -1,0 +1,86 @@
+import java.util.Scanner;
+
+public class UserDefinedSelectionSortAndBinarySearch {
+
+    // Selection sort method
+    static void selectionSort(int[] data) {
+        int n = data.length;
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (data[j] < data[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            // Swap the found minimum element with the first element
+            int temp = data[minIndex];
+            data[minIndex] = data[i];
+            data[i] = temp;
+
+            // Display pass-by-pass output
+            System.out.print("Pass " + (i + 1) + ": ");
+            displayArray(data);
+        }
+    }
+
+    // Binary search method
+    static int binarySearch(int[] data, int target) {
+        int low = 0, high = data.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+
+            if (data[mid] == target) {
+                return mid; // Element found, return its index
+            } else if (data[mid] < target) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return -1; // Element not found
+    }
+
+    // Display array elements
+    static void displayArray(int[] data) {
+        for (int i = 0; i < data.length; i++) {
+            System.out.print(data[i]);
+            if (i < data.length - 1) {
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        // Allowing the user to input their own array
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the size of the array: ");
+        int size = scanner.nextInt();
+
+        int[] data = new int[size];
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < size; i++) {
+            data[i] = scanner.nextInt();
+        }
+
+        // Sorting using selection sort
+        selectionSort(data.clone()); // Displaying pass-by-pass output
+
+        // Example target to search
+        System.out.print("Enter the element to search: ");
+        int target = scanner.nextInt();
+
+        // Using binary search on the sorted data
+        int result = binarySearch(data, target);
+
+        if (result != -1) {
+            System.out.println("Element " + target + " found at index " + result);
+        } else {
+            System.out.println("Element " + target + " not found");
+        }
+
+        scanner.close();
+    }
+}
